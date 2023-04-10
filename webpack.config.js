@@ -34,7 +34,7 @@ module.exports = (env, argv) => {
             extensions: ['.tsx', '.ts', '.js'],
         },
         entry: {
-            main: path.resolve(__dirname, "src/main.ts")
+            main: path.resolve(__dirname, "src/main.tsx")
         },
         output: {
             path: path.resolve(__dirname, 'Release'),
