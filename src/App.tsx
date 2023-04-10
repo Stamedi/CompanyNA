@@ -23,10 +23,27 @@ const App = () => {
 
         setDeviceList((prevDevices) => [...prevDevices, device_data]);
       },
+      // device_updated_callback: (device_data: RDM_Device) => {
+      //   // Called when an RDM Device parameter change is detected.
+      //   // Update existing associated RDM Device entry in the RDM Device List with the values in device_data.
+      //   console.log('Update Device', device_data);
+      //   console.log(device_data);
+      //   // setDeviceList((prevDevices) => [...prevDevices, device_data]);
+      // },
       device_updated_callback: (device_data: RDM_Device) => {
-        // Called when an RDM Device parameter change is detected.
-        // Update existing associated RDM Device entry in the RDM Device List with the values in device_data.
-        console.log('Update Device', device_data);
+        setDeviceList((prevDevices) => {
+          // Find the device in the previous list of devices
+          const index = prevDevices.findIndex((device) => device.uid === device_data.uid);
+          // If the device is not found, just return the previous list of devices
+          if (index === -1) {
+            return prevDevices;
+          } else {
+            // If the device is found, update its data and return the new list of devices
+            const newDevices = [...prevDevices];
+            newDevices[index] = device_data;
+            return newDevices;
+          }
+        });
       },
     });
     // Use Server.GetDeviceCount() to get number of devices in backend device list
@@ -152,9 +169,6 @@ const App = () => {
           </button>
           <button id="sort_manufacturer" className="na-button na-button-green">
             Sort By Manufacturer
-          </button>
-          <button id="device_list" style={{ position: 'relative' }}>
-            Device List
           </button>
         </div>
       </div>

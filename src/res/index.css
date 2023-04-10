@@ -147,11 +147,11 @@ body {
 
 .na-table tr {
   width: 100%;
-  border-bottom: solid 2px var(--dark_bg);
 }
 
 .na-table-header {
   border-bottom: none;
+  /* border-bottom: solid 2px var(--dark_bg); */
 }
 
 .na-table th {
@@ -223,4 +223,27 @@ body {
   background-color: var(--lighter_bg);
   border-color: var(--button_bg);
   color: #888;
+}
+
+.na-table-row-green {
+  background-color: #090;
+  width: 0;
+}
+.na-table-row-red {
+  background-color: #f00;
+}
+
+.table-data > td {
+  text-align: center;
+  color: #777878;
+  padding: 3px 0;
+}
+
+tr:nth-child(even) {
+  background-color: #1c1c1c;
+}
+
+.table-column-borders {
+  border: 1px solid #777878;
+  border-collapse: separate;
 }

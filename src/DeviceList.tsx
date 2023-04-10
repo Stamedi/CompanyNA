@@ -5,14 +5,20 @@ const DeviceList = ({ deviceList }: any) => {
   return (
     <>
       {deviceList.map((device: RDM_Device) => (
-        <tr key={device.uid}>
-          <td>{JSON.stringify(device.is_online)}</td>
+        <tr key={device.uid} className="table-data">
+          <td className={device.is_online ? 'na-table-row-green' : 'na-table-row-red'}>{}</td>
           <td>{device.uid.slice(0, 4) + ' : ' + device.uid.slice(4, device.uid.length)}</td>
-          <td>{'Test' + device.label.slice(0, 6) + ' #' + device.label.slice(7, device.label.length)}</td>
+          <td className="table-column-borders">
+            {'Test' + device.label.slice(0, 6) + ' #' + device.label.slice(7, device.label.length)}
+          </td>
           <td>{device.manufacturer}</td>
           <td>{device.model}</td>
-          <td>Mode #{device.mode_index}</td>
-          <td>{device.address}</td>
+          <td style={{ color: 'white' }} className="text-white">
+            Mode #{device.mode_index}
+          </td>
+          <td style={{ color: 'white' }} className="text-white">
+            {device.address}
+          </td>
         </tr>
       ))}
     </>
