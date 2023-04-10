@@ -3,25 +3,25 @@ import { useState, useEffect } from 'react';
 import { Server } from './Server';
 import { DynamicList } from './DynamicList';
 import { RDM_Device } from './RDM_Device';
+import DeviceList from './DeviceList';
 
-var g_Server: Server;
+let g_Server: Server;
+let g_DeviceList: DynamicList;
 
 const App = () => {
   const [deviceList, setDeviceList] = useState([]);
 
-  window.onload = () => {
-    main();
-  };
+  // window.onload = () => {
+  //   main();
+  // };
+
   function main() {
     g_Server = new Server({
       device_added_callback: (device_data: RDM_Device) => {
         // Called when a new RDM Device has been discovered.
         // Create an RDM Device entry in the RDM Device List with the values in device_data.
-        console.log('Add Device', device_data);
 
-        const currentDeviceList = g_Server.GetDeviceList();
-        console.log(currentDeviceList);
-        setDeviceList(currentDeviceList);
+        setDeviceList((prevDevices) => [...prevDevices, device_data]);
       },
       device_updated_callback: (device_data: RDM_Device) => {
         // Called when an RDM Device parameter change is detected.
@@ -58,7 +58,37 @@ const App = () => {
       console.log('Set DynamicList sort mode to RDM_Device.manufacturer');
     };
   }
-  console.log(deviceList);
+
+  useEffect(() => {
+    // const server = new Server({
+    //   device_added_callback: (device_data: RDM_Device) => {
+    //     setDeviceList((prevDevices) => [...prevDevices, device_data]);
+    //   },
+    //   device_updated_callback: (device_data: RDM_Device) => {
+    //     setDeviceList((prevDevices) => {
+    //       const index = prevDevices.findIndex((device) => device.uid === device_data.uid);
+    //       if (index === -1) {
+    //         return prevDevices;
+    //       }
+    //       const newDevices = [...prevDevices];
+    //       newDevices[index] = device_data;
+    //       return newDevices;
+    //     });
+    //   },
+    // });
+
+    main();
+  }, []);
+
+  // console.log(g_DeviceList);
+  // console.log(Server);
+  // const currentDeviceList = () => {
+  //   console.log(g_Server);
+  //   const devList = g_Server.GetDeviceList();
+  //   setDeviceList(devList);
+  // };
+
+  // console.log(deviceList);
   return (
     <div>
       <div id="test_frame" className="frame">
@@ -123,7 +153,9 @@ const App = () => {
           <button id="sort_manufacturer" className="na-button na-button-green">
             Sort By Manufacturer
           </button>
-          <button id="device_list">Device List</button>
+          <button id="device_list" style={{ position: 'relative' }}>
+            Device List
+          </button>
         </div>
       </div>
       <div id="list_frame" className="frame">
@@ -139,12 +171,8 @@ const App = () => {
               <th style={{ minWidth: ' 12rem' }}>MODE</th>
               <th style={{ minWidth: ' 6rem' }}>ADDRESS</th>
             </tr>
+            <DeviceList deviceList={deviceList} />
           </table>
-          {deviceList.map((device: RDM_Device) => (
-            <div key={device.uid} style={{ position: 'relative' }}>
-              <h1>{device.label}</h1>
-            </div>
-          ))}
         </div>
       </div>
     </div>

@@ -232,10 +232,6 @@ export class Server {
     return this.m_Devices.length;
   }
 
-  public GetDeviceList(): RDM_Device[] {
-    return this.m_Devices;
-  }
-
   public GetDeviceByIndex(index: number): RDM_Device {
     return this.m_Devices[index];
   }
