@@ -227,16 +227,17 @@ body {
 
 .na-table-row-green {
   background-color: #090;
-  width: 0;
+  width: 1%;
 }
 .na-table-row-red {
   background-color: #f00;
+  width: 1%;
 }
 
 .table-data > td {
   text-align: center;
   color: #777878;
-  padding: 3px 0;
+  padding: 1px 0;
 }
 
 tr:nth-child(even) {
@@ -245,5 +246,31 @@ tr:nth-child(even) {
 
 .table-column-borders {
   border: 1px solid #777878;
-  border-collapse: separate;
+}
+
+.table-label-input {
+  background: var(--lighter_bg);
+  outline: none;
+  color: #777878;
+  text-align: center;
+  width: 60%;
+  border: 1px solid #777878;
+}
+
+.table-address-input {
+  background: var(--lighter_bg);
+  color: white;
+  outline: none;
+  text-align: center;
+  width: 25%;
+  border: 1px solid #777878;
+}
+
+select {
+  background: var(--lighter_bg);
+  outline: none;
+  color: white;
+  text-align: center;
+  width: 60%;
+  border: 1px solid #777878;
 }
