@@ -63,18 +63,63 @@ const App = () => {
       console.log('Set DynamicList filter to show devices if RDM_Device.manufacturer == "TMB"');
     };
 
-    document.getElementById('sort_uid').onclick = () => {
-      console.log('Set DynamicList sort mode to RDM_Device.uid_value');
-    };
+    // document.getElementById('sort_uid').onclick = () => {
+    //   console.log('Set DynamicList sort mode to RDM_Device.uid_value');
+    // };
 
-    document.getElementById('sort_address').onclick = () => {
-      console.log('Set DynamicList sort mode to RDM_Device.address');
-    };
+    // document.getElementById('sort_address').onclick = () => {
+    //   console.log('Set DynamicList sort mode to RDM_Device.address');
+    // };
 
-    document.getElementById('sort_manufacturer').onclick = () => {
-      console.log('Set DynamicList sort mode to RDM_Device.manufacturer');
-    };
+    // document.getElementById('sort_manufacturer').onclick = () => {
+    //   console.log('Set DynamicList sort mode to RDM_Device.manufacturer');
+    // };
   }
+
+  //Sorting by device user ID in ascending order
+  const sortByUID = () => {
+    const sortedByUID = deviceList.sort((a, b) => (a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0));
+    setDeviceList([...sortedByUID]);
+  };
+
+  //Sorting by device address in ascending order
+  const sortByAddress = () => {
+    const sortedByAddress = deviceList.sort((a, b) => a.address - b.address);
+    setDeviceList([...sortedByAddress]);
+  };
+
+  //Sorting by device manufacturer in alphabetical order
+  const sortByManufacturer = () => {
+    const sortedByManufacturer = deviceList.sort((a, b) => {
+      const manufactA = a.manufacturer.toUpperCase(); // ignore upper and lowercase
+      const manufactB = b.manufacturer.toUpperCase(); // ignore upper and lowercase
+      if (manufactA < manufactB) {
+        return -1;
+      }
+      if (manufactA > manufactB) {
+        return 1;
+      }
+
+      return 0;
+    });
+
+    setDeviceList([...sortedByManufacturer]);
+
+    console.log('sorting by manufacturer');
+    console.log(deviceList);
+  };
+
+  // const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+  // const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+  // if (nameA < nameB) {
+  //   return -1;
+  // }
+  // if (nameA > nameB) {
+  //   return 1;
+  // }
+
+  // // names must be equal
+  // return 0;
 
   useEffect(() => {
     // const server = new Server({
@@ -161,19 +206,21 @@ const App = () => {
             Update Random 2%
           </button>
           <div style={{ width: '1rem' }}></div>
-          <button id="sort_uid" className="na-button na-button-green">
+          <button id="sort_uid" className="na-button na-button-green" onClick={() => sortByUID()}>
             Sort By UID
           </button>
-          <button id="sort_address" className="na-button na-button-green">
+          <button id="sort_address" className="na-button na-button-green" onClick={() => sortByAddress()}>
             Sort By Address
           </button>
-          <button id="sort_manufacturer" className="na-button na-button-green">
+          <button id="sort_manufacturer" className="na-button na-button-green" onClick={() => sortByManufacturer()}>
             Sort By Manufacturer
           </button>
         </div>
       </div>
       <div id="list_frame" className="frame">
-        {/* <span>RDM Device List (${FILTER_VISIBLE_COUNT}/${DEVICE_COUNT} | ${FILTER_MODE} | ${SORT_MODE})</span> */}
+        {/* <span>
+          RDM Device List (${FILTER_VISIBLE_COUNT}/${DeviceList.length} | ${FILTER_MODE} | ${SORT_MODE})
+        </span> */}
         <div id="rdm_device_list">
           <table className="na-table" style={{ width: '100%' }}>
             <tr className="rdm-list-header na-table-header">
