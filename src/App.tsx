@@ -84,29 +84,39 @@ const App = () => {
 
   //Sorting by device address in ascending order
   const sortByAddress = () => {
-    const sortedByAddress = deviceList.sort((a, b) => a.address - b.address);
+    const sortedByAddress = deviceList.sort((a, b) => {
+      //If the device addresses are not equal, then sort them by address
+      if (a.address !== b.address) {
+        return a.address - b.address;
+        // Else sort the devices by uid
+      } else {
+        return a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0;
+      }
+    });
     setDeviceList([...sortedByAddress]);
   };
 
   //Sorting by device manufacturer in alphabetical order
   const sortByManufacturer = () => {
     const sortedByManufacturer = deviceList.sort((a, b) => {
-      const manufactA = a.manufacturer.toUpperCase(); // ignore upper and lowercase
-      const manufactB = b.manufacturer.toUpperCase(); // ignore upper and lowercase
-      if (manufactA < manufactB) {
-        return -1;
+      //If the device manufacturers are not equal then sort them by manufacturer name
+      if (a.manufacturer !== b.manufacturer) {
+        const manufacturerA = a.manufacturer.toUpperCase(); // ignore upper and lowercase
+        const manufacturerB = b.manufacturer.toUpperCase(); // ignore upper and lowercase
+        if (manufacturerA < manufacturerB) {
+          return -1;
+        }
+        if (manufacturerA > manufacturerB) {
+          return 1;
+        }
+        return 0;
+        //Else sort the devices by uid
+      } else {
+        return a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0;
       }
-      if (manufactA > manufactB) {
-        return 1;
-      }
-
-      return 0;
     });
 
     setDeviceList([...sortedByManufacturer]);
-
-    console.log('sorting by manufacturer');
-    console.log(deviceList);
   };
 
   // const nameA = a.name.toUpperCase(); // ignore upper and lowercase
