@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { RDM_Device } from './RDM_Device';
 
-const DeviceList = ({ deviceList }: any) => {
+const DeviceList = ({ modifiedList }: any) => {
   return (
     <>
-      {deviceList.map((device: RDM_Device) => (
+      {modifiedList.map((device: RDM_Device) => (
         <tr key={device.uid} className="table-data">
           <td className={device.is_online ? 'na-table-row-green' : 'na-table-row-red'}>{}</td>
           <td>{device.uid.slice(0, 4) + ' : ' + device.uid.slice(4, device.uid.length)}</td>

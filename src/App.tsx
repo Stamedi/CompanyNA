@@ -10,7 +10,7 @@ let g_DeviceList: DynamicList;
 
 const App = () => {
   const [deviceList, setDeviceList] = useState([]);
-
+  const [modifiedList, setModifiedList] = useState([]);
   // window.onload = () => {
   //   main();
   // };
@@ -22,6 +22,7 @@ const App = () => {
         // Create an RDM Device entry in the RDM Device List with the values in device_data.
 
         setDeviceList((prevDevices) => [...prevDevices, device_data]);
+        setModifiedList((prevList) => [...prevList, device_data]);
       },
       // device_updated_callback: (device_data: RDM_Device) => {
       //   // Called when an RDM Device parameter change is detected.
@@ -48,20 +49,20 @@ const App = () => {
     });
     // Use Server.GetDeviceCount() to get number of devices in backend device list
     console.log('Current Device Count: ', g_Server.GetDeviceCount());
-    // Use Server.GetDeviceByIndex() to get backend device by index (index 0 - first added device, index 2 - third added device, ...)
-    console.log('First Device: ', g_Server.GetDeviceByIndex(0));
+    // // Use Server.GetDeviceByIndex() to get backend device by index (index 0 - first added device, index 2 - third added device, ...)
+    // console.log('First Device: ', g_Server.GetDeviceByIndex(0));
 
-    document.getElementById('filter_none').onclick = () => {
-      console.log('Set DynamicList filter to show all devices');
-    };
+    // document.getElementById('filter_none').onclick = () => {
+    //   console.log('Set DynamicList filter to show all devices');
+    // };
 
-    document.getElementById('filter_na').onclick = () => {
-      console.log('Set DynamicList filter to show devices if RDM_Device.manufacturer == "Company NA"');
-    };
+    // document.getElementById('filter_na').onclick = () => {
+    //   console.log('Set DynamicList filter to show devices if RDM_Device.manufacturer == "Company NA"');
+    // };
 
-    document.getElementById('filter_tmb').onclick = () => {
-      console.log('Set DynamicList filter to show devices if RDM_Device.manufacturer == "TMB"');
-    };
+    // document.getElementById('filter_tmb').onclick = () => {
+    //   console.log('Set DynamicList filter to show devices if RDM_Device.manufacturer == "TMB"');
+    // };
 
     // document.getElementById('sort_uid').onclick = () => {
     //   console.log('Set DynamicList sort mode to RDM_Device.uid_value');
@@ -79,7 +80,7 @@ const App = () => {
   //Sorting by device user ID in ascending order
   const sortByUID = () => {
     const sortedByUID = deviceList.sort((a, b) => (a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0));
-    setDeviceList([...sortedByUID]);
+    setModifiedList([...sortedByUID]);
   };
 
   //Sorting by device address in ascending order
@@ -93,7 +94,7 @@ const App = () => {
         return a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0;
       }
     });
-    setDeviceList([...sortedByAddress]);
+    setModifiedList([...sortedByAddress]);
   };
 
   //Sorting by device manufacturer in alphabetical order
@@ -116,7 +117,21 @@ const App = () => {
       }
     });
 
-    setDeviceList([...sortedByManufacturer]);
+    setModifiedList([...sortedByManufacturer]);
+  };
+
+  const filterNA = () => {
+    const filterLogic = deviceList.filter((device) => device.manufacturer === 'Company NA');
+    setModifiedList([...filterLogic]);
+  };
+
+  const filterTMB = () => {
+    const filterLogic = deviceList.filter((device) => device.manufacturer === 'TMB');
+    setModifiedList([...filterLogic]);
+  };
+
+  const clearFilters = () => {
+    setModifiedList(deviceList);
   };
 
   // const nameA = a.name.toUpperCase(); // ignore upper and lowercase
@@ -189,13 +204,13 @@ const App = () => {
             Random Online/Offline
           </button>
           <div style={{ width: '1rem' }}></div>
-          <button id="filter_none" className="na-button na-button-green">
+          <button id="filter_none" className="na-button na-button-green" onClick={() => clearFilters()}>
             Filter: None
           </button>
-          <button id="filter_na" className="na-button na-button-green">
+          <button id="filter_na" className="na-button na-button-green" onClick={() => filterNA()}>
             Filter: NA
           </button>
-          <button id="filter_tmb" className="na-button na-button-green">
+          <button id="filter_tmb" className="na-button na-button-green" onClick={() => filterTMB()}>
             Filter: TMB
           </button>
         </div>
@@ -242,7 +257,7 @@ const App = () => {
               <th style={{ minWidth: ' 12rem' }}>MODE</th>
               <th style={{ minWidth: ' 6rem' }}>ADDRESS</th>
             </tr>
-            <DeviceList deviceList={deviceList} />
+            <DeviceList modifiedList={modifiedList} />
           </table>
         </div>
       </div>
