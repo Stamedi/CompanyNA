@@ -7,19 +7,25 @@ import DeviceList from './DeviceList';
 const App = () => {
   const [deviceList, setDeviceList] = useState([]);
   const [modifiedList, setModifiedList] = useState([]);
+  const [sortingList, setSortingList] = useState([
+    { name: 'Sort By UID', id: 'sort_uid' },
+    { name: 'Sort By Address', id: 'sort_address' },
+    { name: 'Sort By Manufacturer', id: 'sort_manufacturer' },
+  ]);
+  const [filterList, setFilterList] = useState([]);
   const [activeFilter, setActiveFilter] = useState('None');
-  const [activeSorting, setActiveSorting] = useState(null);
+  const [sortingMethod, setSortingMethod] = useState('');
 
   //Sorting by device user ID in ascending order
-  const sortByUID = () => {
-    const sortedByUID = modifiedList.sort((a, b) => (a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0));
-    setActiveSorting('By UID');
+  const sortByUID = (filteredList: RDM_Device[]) => {
+    const sortedByUID = filteredList.sort((a, b) => (a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0));
+    // setSortingMethod('Sort By UID');
     setModifiedList([...sortedByUID]);
   };
 
   //Sorting by device address in ascending order
-  const sortByAddress = () => {
-    const sortedByAddress = modifiedList.sort((a, b) => {
+  const sortByAddress = (filteredList: RDM_Device[]) => {
+    const sortedByAddress = filteredList.sort((a, b) => {
       //If the device addresses are not equal, then sort them by address
       if (a.address !== b.address) {
         return a.address - b.address;
@@ -28,13 +34,13 @@ const App = () => {
         return a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0;
       }
     });
-    setActiveSorting('By Address');
+    // setSortingMethod('Sort By Address');
     setModifiedList([...sortedByAddress]);
   };
 
   //Sorting by device manufacturer in alphabetical order
-  const sortByManufacturer = () => {
-    const sortedByManufacturer = modifiedList.sort((a, b) => {
+  const sortByManufacturer = (filteredList: RDM_Device[]) => {
+    const sortedByManufacturer = filteredList.sort((a, b) => {
       //If the device manufacturers are not equal then sort them by manufacturer name
       if (a.manufacturer !== b.manufacturer) {
         const manufacturerA = a.manufacturer.toUpperCase(); // ignore upper and lowercase
@@ -51,26 +57,43 @@ const App = () => {
         return a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0;
       }
     });
-    setActiveSorting('By Manufacturer');
+    // setSortingMethod('Sort By Manufacturer');
     setModifiedList([...sortedByManufacturer]);
   };
 
+  const sortingLogic = (list: RDM_Device[]) => {
+    if (sortingMethod.includes('UID')) {
+      sortByUID(list);
+    } else if (sortingMethod.includes('Address')) {
+      sortByAddress(list);
+    } else if (sortingMethod.includes('Manufacturer')) {
+      sortByManufacturer(list);
+    } else {
+      setModifiedList([...list]);
+    }
+  };
+
   const filterNA = () => {
-    const filterLogic = deviceList.filter((device) => device.manufacturer === 'Company NA');
+    const filteredDevices = deviceList.filter((device) => device.manufacturer === 'Company NA');
     setActiveFilter('Company NA');
-    setModifiedList([...filterLogic]);
+    sortingLogic(filteredDevices);
   };
 
   const filterTMB = () => {
-    const filterLogic = deviceList.filter((device) => device.manufacturer === 'TMB');
+    const filteredDevices = deviceList.filter((device) => device.manufacturer === 'TMB');
     setActiveFilter('TMB');
-    setModifiedList([...filterLogic]);
+    sortingLogic(filteredDevices);
   };
 
   const clearFilters = () => {
     setActiveFilter('None');
-    setModifiedList(deviceList);
+    sortingLogic(deviceList);
+    // setModifiedList(deviceList);
   };
+
+  useEffect(() => {
+    sortingLogic(modifiedList);
+  }, [sortingMethod, modifiedList]);
 
   useEffect(() => {
     const server = new Server({
@@ -78,15 +101,17 @@ const App = () => {
         // Called when a new RDM Device has been discovered.
         // Create an RDM Device entry in the RDM Device List with the values in device_data.
 
+        //First state always stores the full device list so it can be used for resetting the modified list and filtering the modified list
+        //Second state is storing only the list that has been changed, I use it as the list that is being displayed
         setDeviceList((prevDevices) => [...prevDevices, device_data]);
-        setModifiedList((prevList) => [...prevList, device_data]);
+        setModifiedList((prevDevices) => [...prevDevices, device_data]);
       },
 
       device_updated_callback: (device_data: RDM_Device) => {
         // Called when an RDM Device parameter change is detected.
         // Update existing associated RDM Device entry in the RDM Device List with the values in device_data.
 
-        setDeviceList((prevDevices) => {
+        setModifiedList((prevDevices) => {
           // Find the device in the previous list of devices
           const index = prevDevices.findIndex((device) => device.uid === device_data.uid);
           // If the device is not found, just return the previous list of devices
@@ -158,7 +183,17 @@ const App = () => {
             Update Random 2%
           </button>
           <div style={{ width: '1rem' }}></div>
-          <button id="sort_uid" className="na-button na-button-green" onClick={() => sortByUID()}>
+          {sortingList.map((sortingMethod) => (
+            <button
+              key={sortingMethod.id}
+              id={sortingMethod.id}
+              className="na-button na-button-green"
+              onClick={() => setSortingMethod(sortingMethod.name)}
+            >
+              {sortingMethod.name}
+            </button>
+          ))}
+          {/* <button id="sort_uid" className="na-button na-button-green" onClick={() => sortByUID()}>
             Sort By UID
           </button>
           <button id="sort_address" className="na-button na-button-green" onClick={() => sortByAddress()}>
@@ -166,14 +201,14 @@ const App = () => {
           </button>
           <button id="sort_manufacturer" className="na-button na-button-green" onClick={() => sortByManufacturer()}>
             Sort By Manufacturer
-          </button>
+          </button> */}
         </div>
       </div>
       <div id="list_frame" className="frame">
         <span>
           RDM Device List: {deviceList.length} | Filtered Device List: {modifiedList.length} | Active Filter:{' '}
           {activeFilter} | Active Sorting Method:
-          {activeSorting}
+          {sortingMethod}
         </span>
         <div id="rdm_device_list">
           <table className="na-table" style={{ width: '100%' }}>

@@ -10,6 +10,7 @@ const DeviceList = ({ modifiedList }: any) => {
           <td>{device.uid.slice(0, 4) + ' : ' + device.uid.slice(4, device.uid.length)}</td>
           <td>
             <input
+              readOnly
               type="text"
               value={'Test' + device.label.slice(0, 6) + ' #' + device.label.slice(7, device.label.length)}
               className="table-label-input"
@@ -23,7 +24,7 @@ const DeviceList = ({ modifiedList }: any) => {
             </select>
           </td>
           <td className="text-white">
-            <input type="text" value={device.address} className="table-address-input" />
+            <input readOnly type="text" value={device.address} className="table-address-input" />
             {/* {device.address} */}
           </td>
         </tr>
