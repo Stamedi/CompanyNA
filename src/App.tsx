@@ -93,7 +93,7 @@ const App = () => {
 
   useEffect(() => {
     sortingLogic(modifiedList);
-  }, [sortingMethod, modifiedList]);
+  }, [sortingMethod, deviceList]);
 
   useEffect(() => {
     const server = new Server({
@@ -111,7 +111,7 @@ const App = () => {
         // Called when an RDM Device parameter change is detected.
         // Update existing associated RDM Device entry in the RDM Device List with the values in device_data.
 
-        setModifiedList((prevDevices) => {
+        setDeviceList((prevDevices) => {
           // Find the device in the previous list of devices
           const index = prevDevices.findIndex((device) => device.uid === device_data.uid);
           // If the device is not found, just return the previous list of devices
@@ -212,16 +212,20 @@ const App = () => {
         </span>
         <div id="rdm_device_list">
           <table className="na-table" style={{ width: '100%' }}>
-            <tr className="rdm-list-header na-table-header">
-              <th style={{ minWidth: '1rem', maxWidth: '1rem' }}></th>
-              <th style={{ minWidth: '6rem', maxWidth: '6rem' }}>UID</th>
-              <th style={{ minWidth: '12rem' }}>LABEL</th>
-              <th style={{ minWidth: '8rem' }}>MANUFACTURER</th>
-              <th style={{ minWidth: '12rem' }}>MODEL</th>
-              <th style={{ minWidth: ' 12rem' }}>MODE</th>
-              <th style={{ minWidth: ' 6rem' }}>ADDRESS</th>
-            </tr>
-            <DeviceList modifiedList={modifiedList} />
+            <thead>
+              <tr className="rdm-list-header na-table-header">
+                <th style={{ minWidth: '1rem', maxWidth: '1rem' }}></th>
+                <th style={{ minWidth: '6rem', maxWidth: '6rem' }}>UID</th>
+                <th style={{ minWidth: '12rem' }}>LABEL</th>
+                <th style={{ minWidth: '8rem' }}>MANUFACTURER</th>
+                <th style={{ minWidth: '12rem' }}>MODEL</th>
+                <th style={{ minWidth: ' 12rem' }}>MODE</th>
+                <th style={{ minWidth: ' 6rem' }}>ADDRESS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <DeviceList modifiedList={modifiedList} />
+            </tbody>
           </table>
         </div>
       </div>
