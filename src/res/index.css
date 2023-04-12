@@ -162,6 +162,8 @@ body {
   padding: 0;
   border: none;
   padding: 0 1rem;
+  position: sticky;
+  top: 0px;
 }
 
 .na-table td {

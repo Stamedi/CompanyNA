@@ -7,7 +7,7 @@ import DeviceList from './DeviceList';
 const App = () => {
   const [deviceList, setDeviceList] = useState([]);
   const [modifiedList, setModifiedList] = useState([]);
-  const [sortingList, setSortingList] = useState([
+  const [sortingList] = useState([
     { name: 'Sort By UID', id: 'sort_uid' },
     { name: 'Sort By Address', id: 'sort_address' },
     { name: 'Sort By Manufacturer', id: 'sort_manufacturer' },
@@ -193,22 +193,12 @@ const App = () => {
               {sortingMethod.name}
             </button>
           ))}
-          {/* <button id="sort_uid" className="na-button na-button-green" onClick={() => sortByUID()}>
-            Sort By UID
-          </button>
-          <button id="sort_address" className="na-button na-button-green" onClick={() => sortByAddress()}>
-            Sort By Address
-          </button>
-          <button id="sort_manufacturer" className="na-button na-button-green" onClick={() => sortByManufacturer()}>
-            Sort By Manufacturer
-          </button> */}
         </div>
       </div>
       <div id="list_frame" className="frame">
         <span>
-          RDM Device List: {deviceList.length} | Filtered Device List: {modifiedList.length} | Active Filter:{' '}
-          {activeFilter} | Active Sorting Method:
-          {sortingMethod}
+          RDM Device List: {deviceList.length} | Filtered Device List: {modifiedList.length} | Filter Setting:{' '}
+          {activeFilter} | Sort Mode: {sortingMethod}
         </span>
         <div id="rdm_device_list">
           <table className="na-table" style={{ width: '100%' }}>
