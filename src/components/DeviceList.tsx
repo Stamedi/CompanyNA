@@ -1,10 +1,7 @@
 import * as React from 'react';
-import { useState } from 'react';
-import { RDM_Device } from './RDM_Device';
+import { RDM_Device } from '../server/RDM_Device';
 
 const DeviceList = ({ modifiedList }: any) => {
-  const [labelValue, setLabelValue] = useState('');
-
   return (
     <>
       {modifiedList.map((device: RDM_Device) => (
@@ -38,7 +35,6 @@ const DeviceList = ({ modifiedList }: any) => {
               className="table-address-input"
               onChange={() => console.log(device.uid, device.address)}
             />
-            {/* {device.address} */}
           </td>
         </tr>
       ))}
