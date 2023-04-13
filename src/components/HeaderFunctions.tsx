@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const HeaderFilters = ({ clearFilters, filterNA, filterTMB, sortingList, setSortingMethod }: any) => {
+const HeaderFilters = ({ sortingList, setSortingMethod, filtersList, setFilterSetting }: any) => {
   return (
     <div id="test_frame" className="frame">
       <span>Test Functions</span>
@@ -28,15 +28,11 @@ const HeaderFilters = ({ clearFilters, filterNA, filterTMB, sortingList, setSort
           Random Online/Offline
         </button>
         <div style={{ width: '1rem' }}></div>
-        <button id="filter_none" className="na-button na-button-green" onClick={() => clearFilters()}>
-          Filter: None
-        </button>
-        <button id="filter_na" className="na-button na-button-green" onClick={() => filterNA()}>
-          Filter: NA
-        </button>
-        <button id="filter_tmb" className="na-button na-button-green" onClick={() => filterTMB()}>
-          Filter: TMB
-        </button>
+        {filtersList.map((filter: any) => (
+          <button id={filter.id} className="na-button na-button-green" onClick={() => setFilterSetting(filter.name)}>
+            Filter: {filter.name}
+          </button>
+        ))}
       </div>
       <div id="test_buttons_b">
         <button id="all_update" className="na-button">
@@ -55,14 +51,14 @@ const HeaderFilters = ({ clearFilters, filterNA, filterTMB, sortingList, setSort
           Update Random 2%
         </button>
         <div style={{ width: '1rem' }}></div>
-        {sortingList.map((item: any) => (
+        {sortingList.map((sort: any) => (
           <button
-            key={item.id}
-            id={item.id}
+            key={sort.id}
+            id={sort.id}
             className="na-button na-button-green"
-            onClick={() => setSortingMethod(item.name)}
+            onClick={() => setSortingMethod(sort.name)}
           >
-            {item.name}
+            Sort By {sort.name}
           </button>
         ))}
       </div>

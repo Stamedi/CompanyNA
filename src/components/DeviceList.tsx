@@ -6,7 +6,7 @@ const DeviceList = ({ modifiedList }: any) => {
     <>
       {modifiedList.map((device: RDM_Device) => (
         <tr key={device.uid} className="table-data">
-          <td className={device.is_online ? 'na-table-row-green' : 'na-table-row-red'}>{}</td>
+          <td className={device.is_online ? 'na-table-row-green' : 'na-table-row-red'}></td>
           <td>{device.uid.slice(0, 4) + ' : ' + device.uid.slice(4, device.uid.length)}</td>
           <td>
             <input
@@ -31,9 +31,10 @@ const DeviceList = ({ modifiedList }: any) => {
           <td className="text-white">
             <input
               type="text"
-              value={device.address}
+              placeholder={JSON.stringify(device.address)}
+              // value={device.address}
               className="table-address-input"
-              onChange={() => console.log(device.uid, device.address)}
+              onChange={(e) => console.log(device.uid, e.target.value)}
             />
           </td>
         </tr>

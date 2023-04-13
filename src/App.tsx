@@ -9,18 +9,33 @@ const App = () => {
   const [deviceList, setDeviceList] = useState([]);
   const [modifiedList, setModifiedList] = useState([]);
   const [sortingList] = useState([
-    { name: 'Sort By UID', id: 'sort_uid' },
-    { name: 'Sort By Address', id: 'sort_address' },
-    { name: 'Sort By Manufacturer', id: 'sort_manufacturer' },
+    { name: 'UID', id: 'sort_uid' },
+    { name: 'Address', id: 'sort_address' },
+    { name: 'Manufacturer', id: 'sort_manufacturer' },
   ]);
-  const [filterList, setFilterList] = useState([]);
-  const [activeFilter, setActiveFilter] = useState('None');
+  const [filtersList] = useState([
+    { name: 'Filter: None', id: 'filter_none' },
+    { name: 'Filter: NA', id: 'filter_na' },
+    { name: 'Filter: TMB', id: 'filter_tmb' },
+  ]);
+  const [filterSetting, setFilterSetting] = useState('None');
   const [sortingMethod, setSortingMethod] = useState('');
+
+  const sortingLogic = (list: RDM_Device[]) => {
+    if (sortingMethod.includes('UID')) {
+      sortByUID(list);
+    } else if (sortingMethod.includes('Address')) {
+      sortByAddress(list);
+    } else if (sortingMethod.includes('Manufacturer')) {
+      sortByManufacturer(list);
+    } else {
+      setModifiedList([...list]);
+    }
+  };
 
   //Sorting by device user ID in ascending order
   const sortByUID = (filteredList: RDM_Device[]) => {
     const sortedByUID = filteredList.sort((a, b) => (a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0));
-    // setSortingMethod('Sort By UID');
     setModifiedList([...sortedByUID]);
   };
 
@@ -35,7 +50,6 @@ const App = () => {
         return a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0;
       }
     });
-    // setSortingMethod('Sort By Address');
     setModifiedList([...sortedByAddress]);
   };
 
@@ -58,42 +72,43 @@ const App = () => {
         return a.uid < b.uid ? -1 : a.uid > b.uid ? 1 : 0;
       }
     });
-    // setSortingMethod('Sort By Manufacturer');
     setModifiedList([...sortedByManufacturer]);
   };
 
-  const sortingLogic = (list: RDM_Device[]) => {
-    if (sortingMethod.includes('UID')) {
-      sortByUID(list);
-    } else if (sortingMethod.includes('Address')) {
-      sortByAddress(list);
-    } else if (sortingMethod.includes('Manufacturer')) {
-      sortByManufacturer(list);
-    } else {
-      setModifiedList([...list]);
+  const filteringLogic = (list: RDM_Device[]) => {
+    if (sortingMethod.includes('Company NA')) {
+      filterNA(list);
+    } else if (sortingMethod.includes('TMB')) {
+      filterTMB(list);
+    } else if (sortingMethod.includes('None')) {
+      sortingLogic(deviceList);
     }
   };
 
-  const filterNA = () => {
-    const filteredDevices = deviceList.filter((device) => device.manufacturer === 'Company NA');
-    setActiveFilter('Company NA');
+  const filterNA = (list: RDM_Device[]) => {
+    const filteredDevices = list.filter((device) => device.manufacturer === 'Company NA');
+    // setFilterSetting('Company NA');
     sortingLogic(filteredDevices);
   };
 
-  const filterTMB = () => {
-    const filteredDevices = deviceList.filter((device) => device.manufacturer === 'TMB');
-    setActiveFilter('TMB');
+  const filterTMB = (list: RDM_Device[]) => {
+    const filteredDevices = list.filter((device) => device.manufacturer === 'TMB');
+    // setFilterSetting('TMB');
     sortingLogic(filteredDevices);
   };
 
-  const clearFilters = () => {
-    setActiveFilter('None');
-    sortingLogic(deviceList);
-  };
+  // const clearFilters = (list: RDM_Device[]) => {
+  //   setFilterSetting('None');
+  //   sortingLogic(deviceList);
+  // };
 
   useEffect(() => {
     sortingLogic(modifiedList);
   }, [sortingMethod, deviceList]);
+
+  useEffect(() => {
+    filteringLogic(deviceList);
+  }, [filterSetting, deviceList]);
 
   useEffect(() => {
     const server = new Server({
@@ -131,16 +146,16 @@ const App = () => {
   return (
     <div>
       <HeaderFunctions
-        clearFilters={clearFilters}
-        filterNA={filterNA}
-        filterTMB={filterTMB}
         sortingList={sortingList}
         setSortingMethod={setSortingMethod}
+        filtersList={filtersList}
+        setFilterSetting={setFilterSetting}
       />
       <div id="list_frame" className="frame">
         <span>
-          RDM Device List: {deviceList.length} | Filtered Device List: {modifiedList.length} | Filter Setting:{' '}
-          {activeFilter} | Sort Mode: {sortingMethod}
+          RDM Device List: {deviceList.length} | Filtered Device List:{' '}
+          {deviceList.length === modifiedList.length ? 0 : modifiedList.length} | Filter Setting: {filterSetting} | Sort
+          Mode: {sortingMethod}
         </span>
         <MainTable modifiedList={modifiedList} />
       </div>

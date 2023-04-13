@@ -228,12 +228,10 @@ body {
 }
 
 .na-table-row-green {
-  background-color: #090;
-  width: 1%;
+  border-left: 9px solid #090;
 }
 .na-table-row-red {
-  background-color: #f00;
-  width: 1%;
+  border-left: 9px solid #f00;
 }
 
 .table-data > td {
@@ -255,7 +253,6 @@ tr:nth-child(even) {
   outline: none;
   color: #777878;
   text-align: center;
-  width: 60%;
   border: 1px solid #777878;
 }
 
@@ -264,7 +261,7 @@ tr:nth-child(even) {
   color: white;
   outline: none;
   text-align: center;
-  width: 25%;
+  width: 40%;
   border: 1px solid #777878;
 }
 
@@ -273,6 +270,22 @@ select {
   outline: none;
   color: white;
   text-align: center;
-  width: 60%;
+  width: 70%;
   border: 1px solid #777878;
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: white;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: white;
 }
