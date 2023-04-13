@@ -1,6 +1,20 @@
 import * as React from 'react';
+export interface SettingList {
+  name: string;
+  id: string;
+}
 
-const HeaderFilters = ({ sortingList, setSortingMethod, filtersList, setFilterSetting }: any) => {
+const HeaderFilters = ({
+  sortingList,
+  setSortingMethod,
+  filtersList,
+  setFilterSetting,
+}: {
+  sortingList: SettingList[];
+  setSortingMethod: React.Dispatch<React.SetStateAction<string>>;
+  filtersList: SettingList[];
+  setFilterSetting: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   return (
     <div id="test_frame" className="frame">
       <span>Test Functions</span>
@@ -28,8 +42,13 @@ const HeaderFilters = ({ sortingList, setSortingMethod, filtersList, setFilterSe
           Random Online/Offline
         </button>
         <div style={{ width: '1rem' }}></div>
-        {filtersList.map((filter: any) => (
-          <button id={filter.id} className="na-button na-button-green" onClick={() => setFilterSetting(filter.name)}>
+        {filtersList.map((filter) => (
+          <button
+            key={filter.id}
+            id={filter.id}
+            className="na-button na-button-green"
+            onClick={() => setFilterSetting(filter.name)}
+          >
             Filter: {filter.name}
           </button>
         ))}
@@ -51,7 +70,7 @@ const HeaderFilters = ({ sortingList, setSortingMethod, filtersList, setFilterSe
           Update Random 2%
         </button>
         <div style={{ width: '1rem' }}></div>
-        {sortingList.map((sort: any) => (
+        {sortingList.map((sort) => (
           <button
             key={sort.id}
             id={sort.id}

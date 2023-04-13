@@ -2,7 +2,7 @@ import * as React from 'react';
 import DeviceList from './DeviceList';
 import { RDM_Device } from '../server/RDM_Device';
 
-const MainTable = ({ modifiedList }: any) => {
+const MainTable = ({ modifiedList }: { modifiedList: RDM_Device[] }) => {
   return (
     <div id="rdm_device_list">
       <table className="na-table" style={{ width: '100%' }}>

@@ -5,21 +5,26 @@ import { RDM_Device } from './server/RDM_Device';
 import MainTable from './components/MainTable';
 import HeaderFunctions from './components/HeaderFunctions';
 
+export interface SettingList {
+  name: string;
+  id: string;
+}
+
 const App = () => {
-  const [deviceList, setDeviceList] = useState([]);
-  const [modifiedList, setModifiedList] = useState([]);
-  const [sortingList] = useState([
+  const [deviceList, setDeviceList] = useState<RDM_Device[]>([]);
+  const [modifiedList, setModifiedList] = useState<RDM_Device[]>([]);
+  const [sortingList] = useState<SettingList[]>([
     { name: 'UID', id: 'sort_uid' },
     { name: 'Address', id: 'sort_address' },
     { name: 'Manufacturer', id: 'sort_manufacturer' },
   ]);
-  const [filtersList] = useState([
-    { name: 'Filter: None', id: 'filter_none' },
-    { name: 'Filter: NA', id: 'filter_na' },
-    { name: 'Filter: TMB', id: 'filter_tmb' },
+  const [filtersList] = useState<SettingList[]>([
+    { name: 'None', id: 'filter_none' },
+    { name: 'Company NA', id: 'filter_na' },
+    { name: 'TMB', id: 'filter_tmb' },
   ]);
-  const [filterSetting, setFilterSetting] = useState('None');
-  const [sortingMethod, setSortingMethod] = useState('');
+  const [filterSetting, setFilterSetting] = useState<string>('None');
+  const [sortingMethod, setSortingMethod] = useState<string>('');
 
   const sortingLogic = (list: RDM_Device[]) => {
     if (sortingMethod.includes('UID')) {
@@ -76,35 +81,28 @@ const App = () => {
   };
 
   const filteringLogic = (list: RDM_Device[]) => {
-    if (sortingMethod.includes('Company NA')) {
+    if (filterSetting.includes('Company NA')) {
       filterNA(list);
-    } else if (sortingMethod.includes('TMB')) {
+    } else if (filterSetting.includes('TMB')) {
       filterTMB(list);
-    } else if (sortingMethod.includes('None')) {
+    } else if (filterSetting.includes('None')) {
       sortingLogic(deviceList);
     }
   };
 
   const filterNA = (list: RDM_Device[]) => {
     const filteredDevices = list.filter((device) => device.manufacturer === 'Company NA');
-    // setFilterSetting('Company NA');
     sortingLogic(filteredDevices);
   };
 
   const filterTMB = (list: RDM_Device[]) => {
     const filteredDevices = list.filter((device) => device.manufacturer === 'TMB');
-    // setFilterSetting('TMB');
     sortingLogic(filteredDevices);
   };
 
-  // const clearFilters = (list: RDM_Device[]) => {
-  //   setFilterSetting('None');
-  //   sortingLogic(deviceList);
-  // };
-
   useEffect(() => {
     sortingLogic(modifiedList);
-  }, [sortingMethod, deviceList]);
+  }, [sortingMethod]);
 
   useEffect(() => {
     filteringLogic(deviceList);

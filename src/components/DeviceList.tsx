@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RDM_Device } from '../server/RDM_Device';
 
-const DeviceList = ({ modifiedList }: any) => {
+const DeviceList = ({ modifiedList }: { modifiedList: RDM_Device[] }) => {
   return (
     <>
       {modifiedList.map((device: RDM_Device) => (
@@ -12,12 +12,7 @@ const DeviceList = ({ modifiedList }: any) => {
             <input
               type="text"
               value={'Test' + device.label.slice(0, 6) + ' #' + device.label.slice(7, device.label.length)}
-              onChange={() =>
-                console.log(
-                  device.uid,
-                  'Test' + device.label.slice(0, 6) + ' #' + device.label.slice(7, device.label.length)
-                )
-              }
+              onChange={(e) => console.log(device.uid, e.target.value)}
               className="table-label-input"
             />
           </td>
@@ -31,8 +26,7 @@ const DeviceList = ({ modifiedList }: any) => {
           <td className="text-white">
             <input
               type="text"
-              placeholder={JSON.stringify(device.address)}
-              // value={device.address}
+              value={device.address}
               className="table-address-input"
               onChange={(e) => console.log(device.uid, e.target.value)}
             />
