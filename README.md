@@ -1,6 +1,3 @@
-# CompanyNA
-provide detailed descriptions of how you plan to complete the task
-
 The task is completed using React framework.
 
 Running project locally:
